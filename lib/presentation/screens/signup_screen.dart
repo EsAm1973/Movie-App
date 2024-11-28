@@ -39,7 +39,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 child: BlocConsumer<AuthCubit, AuthState>(
                   listener: (context, state) {
                     if (state is SignUpSuccess) {
-                      Navigator.pushReplacementNamed(context, 'home');
+                      Navigator.pushReplacementNamed(context, '/');
                     } else if (state is SignUpError) {
                       ScaffoldMessenger.of(context)
                           .showSnackBar(SnackBar(content: Text(state.message)));
@@ -243,13 +243,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                     _confirmPasswordController.text.trim();
 
                                 BlocProvider.of<AuthCubit>(context)
-                                    .validateInputs(
-                                        username, password, confirmPassword);
-
-                                if (state is SignUpValid) {
-                                  BlocProvider.of<AuthCubit>(context)
-                                      .registerUser(username, password);
-                                }
+                                    .register(username, password);
                               }
                             },
                             child: const Text(
@@ -309,7 +303,9 @@ class _SignupScreenState extends State<SignupScreen> {
                                   fontWeight: FontWeight.bold),
                             ),
                             TextButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.pushReplacementNamed(context, '/');
+                                },
                                 child: const Text(
                                   'Login',
                                   style: TextStyle(color: Colors.white),
