@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/app_routing.dart';
 import 'package:movie_app/presentation/screens/login_screen.dart';
 import 'package:movie_app/presentation/screens/signup_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final AppRouting appRouting = AppRouting();
+
+  MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +21,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const SignupScreen(),
+      onGenerateRoute: appRouting.onGenerateRoute,
     );
   }
 }

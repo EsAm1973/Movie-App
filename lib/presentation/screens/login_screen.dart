@@ -74,7 +74,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   color: Colors.grey,
                                 ),
                                 filled: true,
-                                fillColor: const Color.fromARGB(255, 32, 32, 32),
+                                fillColor:
+                                    const Color.fromARGB(255, 32, 32, 32),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(30),
                                   borderSide:
@@ -220,7 +221,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               color: Colors.grey, fontWeight: FontWeight.bold),
                         ),
                         TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.pushReplacementNamed(
+                                  context, 'register');
+                            },
                             child: const Text(
                               'Sign Up',
                               style: TextStyle(color: Colors.white),
