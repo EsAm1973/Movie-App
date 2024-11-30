@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:movie_app/app_routing.dart';
-import 'package:movie_app/presentation/screens/login_screen.dart';
-import 'package:movie_app/presentation/screens/signup_screen.dart';
 
 void main() {
   runApp(MyApp());

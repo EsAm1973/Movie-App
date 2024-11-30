@@ -13,11 +13,6 @@ class CategoryMoviesScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        leading: IconButton(
-            onPressed: () {
-              Navigator.of(context).popAndPushNamed('');
-            },
-            icon: const Icon(Icons.arrow_back)),
         title: Text('$category Movies'),
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
