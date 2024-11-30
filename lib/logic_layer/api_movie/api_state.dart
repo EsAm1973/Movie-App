@@ -20,6 +20,12 @@ class CategoryMoviesLoaded extends MoviesState {
   CategoryMoviesLoaded({required this.category, required this.movies});
 }
 
+class MoviesSearchLoaded extends MoviesState{
+  final List<Movie> searchedMovies;
+
+  MoviesSearchLoaded({required this.searchedMovies});
+}
+
 class MoviesError extends MoviesState {
   final String errMessage;
 

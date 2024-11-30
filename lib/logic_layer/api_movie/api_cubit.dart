@@ -11,7 +11,6 @@ class MoviesCubit extends Cubit<MoviesState> {
 
   final MovieApiRepository movieApiRepository;
   Map<String, List<Movie>>? categorizedMovies;
-  List<Movie>? categoryMovies;
 
   void fetchMovies() {
     emit(MoviesLoading());
@@ -30,22 +29,27 @@ class MoviesCubit extends Cubit<MoviesState> {
           }
         }
       }
-      emit(MoviesLoaded(categorizedMovies: categoriesMovies));
       categorizedMovies = categoriesMovies;
+      emit(MoviesLoaded(categorizedMovies: categoriesMovies));
     }).catchError((error) {
       emit(MoviesError(errMessage: 'Failed to fetch: $error'));
     });
   }
 
-  void fetchMoviesByCategory(String category) {
-    emit(MoviesLoading());
-    movieApiRepository.fetchTopMovie().then((movies) {
-      final filteredMovies =
-          movies.where((movie) => movie.genre.contains(category)).toList();
-      emit(CategoryMoviesLoaded(category: category, movies: filteredMovies));
-      categoryMovies = filteredMovies;
-    }).catchError((error) {
-      emit(MoviesError(errMessage: 'Failed to fetch movies: $error'));
+  void searchMovies(String query) {
+    if (query.isEmpty) {
+      if (categorizedMovies != null) {
+        emit(MoviesLoaded(categorizedMovies: categorizedMovies!));
+      }
+      return;
+    }
+    final List<Movie> searchedMovies = [];
+    categorizedMovies?.values.forEach((movieList) {
+      searchedMovies.addAll(
+        movieList.where(
+            (movie) => movie.title.toLowerCase().contains(query.toLowerCase())),
+      );
     });
+    emit(MoviesSearchLoaded(searchedMovies: searchedMovies));
   }
 }
