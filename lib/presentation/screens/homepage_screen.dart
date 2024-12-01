@@ -118,30 +118,38 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                   itemCount: entry.value.take(6).length,
                                   itemBuilder: (context, index) {
                                     final movie = entry.value[index];
-                                    return Container(
-                                      width: 190,
-                                      height: 170,
-                                      margin: const EdgeInsets.symmetric(
-                                          horizontal: 10),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        border: Border.all(
-                                          color: Colors.grey,
-                                          width: 1,
-                                        ),
-                                        boxShadow: const [
-                                          BoxShadow(
-                                            color: Colors.black26,
-                                            blurRadius: 8,
-                                            offset: Offset(0, 4),
+                                    return GestureDetector(
+                                      onTap: () {
+                                        Navigator.pushNamed(context, 'details',
+                                            arguments: movie);
+                                      },
+                                      child: Container(
+                                        width: 190,
+                                        height: 170,
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal: 10),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          border: Border.all(
+                                            color: Colors.grey,
+                                            width: 1,
                                           ),
-                                        ],
-                                      ),
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(10),
-                                        child: Image.network(
-                                          movie.image,
-                                          fit: BoxFit.cover,
+                                          boxShadow: const [
+                                            BoxShadow(
+                                              color: Colors.black26,
+                                              blurRadius: 8,
+                                              offset: Offset(0, 4),
+                                            ),
+                                          ],
+                                        ),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: Image.network(
+                                            movie.image,
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
                                       ),
                                     );

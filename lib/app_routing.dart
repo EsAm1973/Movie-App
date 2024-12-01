@@ -11,6 +11,7 @@ import 'package:movie_app/logic_layer/user_data/user_data_cubit.dart';
 import 'package:movie_app/presentation/screens/category_movies_screen.dart';
 import 'package:movie_app/presentation/screens/homepage_screen.dart';
 import 'package:movie_app/presentation/screens/login_screen.dart';
+import 'package:movie_app/presentation/screens/movie_details.dart';
 import 'package:movie_app/presentation/screens/signup_screen.dart';
 
 class AppRouting {
@@ -69,6 +70,11 @@ class AppRouting {
                     movies: args['movies'] as List<Movie>,
                   ),
                 ));
+      case 'details':
+        final args = settings.arguments as Movie;
+        return MaterialPageRoute(
+          builder: (_) => MovieDetails(movie: args),
+        );
       default:
         return null;
     }
