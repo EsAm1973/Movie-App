@@ -35,6 +35,7 @@ class AuthCubit extends Cubit<AuthState> {
       final user = await _authUserRepository.loginUser(username, password);
       if (user != null) {
         _userDataCubit.setUser(user);
+        print('The Id of user: ${_userDataCubit.state!.id}');
         emit(LoginSuccess(user: user));
       } else {
         emit(LoginFailure(errMessage: 'Invalid Username or Password'));

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_app/data/model/movie.dart';
+import 'package:movie_app/logic_layer/favorite_movie/favorite_movie_cubit.dart';
+import 'package:movie_app/logic_layer/user_data/user_data_cubit.dart';
 
 class MovieDetails extends StatefulWidget {
   const MovieDetails({super.key, required this.movie});
@@ -9,6 +12,16 @@ class MovieDetails extends StatefulWidget {
 }
 
 class _MovieDetailsState extends State<MovieDetails> {
+  late UserDataCubit userCubit;
+  late int userId;
+  @override
+  void initState() {
+    super.initState();
+    userCubit = context.read<UserDataCubit>();
+    userId = userCubit.state!.id;
+    context.read<FavoriteMovieCubit>().fetchFavoriteMovies(userId);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -52,10 +65,31 @@ class _MovieDetailsState extends State<MovieDetails> {
             Positioned(
               top: 20,
               right: 16,
-              child: IconButton(
-                icon: const Icon(Icons.favorite_border,
-                    size: 30, color: Colors.white),
-                onPressed: () {},
+              child: BlocBuilder<FavoriteMovieCubit, FavoriteMovieState>(
+                builder: (context, state) {
+                  final cubit = context.read<FavoriteMovieCubit>();
+
+                  bool isFavorite = false;
+                  if (state is FavoriteMoviesLoaded) {
+                    isFavorite = state.favoriteMovies
+                        .any((m) => m.id == widget.movie.id);
+                  }
+
+                  return IconButton(
+                    icon: Icon(
+                      isFavorite ? Icons.favorite : Icons.favorite_border,
+                      size: 30,
+                      color: isFavorite ? Colors.red : Colors.white,
+                    ),
+                    onPressed: () {
+                      if (isFavorite) {
+                        cubit.removeFavoriteMovie(userId, widget.movie);
+                      } else {
+                        cubit.addFavoriteMovie(userId, widget.movie);
+                      }
+                    },
+                  );
+                },
               ),
             ),
             Positioned(

@@ -79,23 +79,36 @@ class DatabaseHelper {
   // Add Favorite Movie
   Future<int> addFavoriteMovie(int userId, Movie movie) async {
     final db = await database;
+
+    // Check if the movie already exists
+    final existing = await db.query(
+      'favorite_movies',
+      where: 'user_id = ? AND movie_id = ?',
+      whereArgs: [userId, movie.id],
+    );
+
+    if (existing.isNotEmpty) {
+      return 0; // Skip adding if already exists
+    }
+
+    final movieData = {
+      'user_id': userId,
+      'movie_id': movie.id,
+      'rank': movie.rank,
+      'title': movie.title,
+      'description': movie.description,
+      'image': movie.image,
+      'big_image': movie.bigImage,
+      'genre': movie.genre.join(','), // Save as comma-separated string
+      'thumbnail': movie.thumbnail,
+      'rating': movie.rating,
+      'year': movie.year,
+      'imdb_id': movie.imdbId,
+      'imdb_link': movie.imdbLink,
+    };
     return await db.insert(
       'favorite_movies',
-      {
-        'user_id': userId,
-        'movie_id': movie.id,
-        'rank': movie.rank,
-        'title': movie.title,
-        'description': movie.description,
-        'image': movie.image,
-        'big_image': movie.bigImage,
-        'genre': movie.genre.join(','), // Save as comma-separated string
-        'thumbnail': movie.thumbnail,
-        'rating': movie.rating,
-        'year': movie.year,
-        'imdb_id': movie.imdbId,
-        'imdb_link': movie.imdbLink,
-      },
+      movieData,
       conflictAlgorithm: ConflictAlgorithm.ignore,
     );
   }
@@ -116,7 +129,7 @@ class DatabaseHelper {
         description: movie['description'] as String,
         image: movie['image'] as String,
         bigImage: movie['big_image'] as String,
-        genre: (movie['genre'] as String).split(','), // Convert back to list
+        genre: (movie['genre'] as String).split(','),
         thumbnail: movie['thumbnail'] as String,
         rating: movie['rating'] as String,
         id: movie['movie_id'] as String,

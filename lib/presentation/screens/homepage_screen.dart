@@ -25,6 +25,13 @@ class _HomepageScreenState extends State<HomepageScreen> {
         title: const Text('Welcome back!'),
         foregroundColor: Colors.white,
         backgroundColor: Colors.black,
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, 'favorite');
+              },
+              icon: Icon(Icons.favorite))
+        ],
       ),
       body: SafeArea(
         child: Column(

@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_app/app_routing.dart';
+import 'package:movie_app/logic_layer/user_data/user_data_cubit.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(BlocProvider(
+    create: (context) => UserDataCubit(),
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
