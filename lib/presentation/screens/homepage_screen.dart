@@ -12,12 +12,6 @@ class HomepageScreen extends StatefulWidget {
 
 class _HomepageScreenState extends State<HomepageScreen> {
   @override
-  void initState() {
-    super.initState();
-    BlocProvider.of<MoviesCubit>(context).fetchMovies();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,

@@ -13,6 +13,14 @@ class MoviesLoaded extends MoviesState {
   MoviesLoaded({required this.categorizedMovies});
 }
 
+class MovieDetailsLoading extends MoviesState {}
+
+class MovieDetailsLoaded extends MoviesState {
+  final Movie movie;
+
+  MovieDetailsLoaded({required this.movie});
+}
+
 class CategoryMoviesLoaded extends MoviesState {
   final String category;
   final List<Movie> movies;

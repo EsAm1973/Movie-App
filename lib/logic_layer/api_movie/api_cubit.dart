@@ -13,8 +13,14 @@ class MoviesCubit extends Cubit<MoviesState> {
   Map<String, List<Movie>>? categorizedMovies;
 
   void fetchMovies() {
+    if (categorizedMovies != null) {
+      // Re-emit the cached state if movies are already fetched
+      emit(MoviesLoaded(categorizedMovies: categorizedMovies!));
+      return;
+    }
+
     emit(MoviesLoading());
-    movieApiRepository.fetchTopMovie().then((movies) {
+    movieApiRepository.fetchTopMovies().then((movies) {
       final Map<String, List<Movie>> categoriesMovies = {
         'Drama': [],
         'Action': [],
@@ -33,6 +39,15 @@ class MoviesCubit extends Cubit<MoviesState> {
       emit(MoviesLoaded(categorizedMovies: categoriesMovies));
     }).catchError((error) {
       emit(MoviesError(errMessage: 'Failed to fetch: $error'));
+    });
+  }
+
+  void fetchMovieDetails(String movieId) {
+    emit(MovieDetailsLoading());
+    movieApiRepository.fetchMovieDetails(movieId).then((movie) {
+      emit(MovieDetailsLoaded(movie: movie));
+    }).catchError((error) {
+      emit(MoviesError(errMessage: 'Failed to fetch movie details: $error'));
     });
   }
 

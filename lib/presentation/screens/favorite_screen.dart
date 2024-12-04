@@ -26,6 +26,12 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.black,
+        appBar: AppBar(
+          title: Text('Favorite Movies'),
+          foregroundColor: Colors.white,
+          backgroundColor: Colors.black,
+          centerTitle: true,
+        ),
         body: BlocBuilder<FavoriteMovieCubit, FavoriteMovieState>(
           builder: (context, state) {
             if (state is FavoriteMoviesLoading) {
@@ -33,36 +39,102 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                 child: CircularProgressIndicator(),
               );
             } else if (state is FavoriteMoviesLoaded) {
+              if (state.favoriteMovies.isEmpty) {
+                return const Center(
+                    child: Text('No favorite movies yet.',
+                        style: TextStyle(color: Colors.white)));
+              }
               return ListView.builder(
                 itemCount: state.favoriteMovies.length,
+                padding:
+                    const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
                 itemBuilder: (context, index) {
                   final movie = state.favoriteMovies[index];
-                  return Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Card(
-                      color: Colors.black54,
-                      elevation: 2,
-                      shadowColor: Colors.grey,
-                      child: ListTile(
-                        leading: Image.network(
-                          movie.bigImage,
-                          width: 100,
-                          height: 100,
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, 'details', arguments: movie);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
                         ),
-                        title: Text(
-                          movie.title,
-                          style: const TextStyle(color: Colors.white),
+                        elevation: 5,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            gradient: const LinearGradient(
+                              colors: [Colors.black87, Colors.black54],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Row(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.network(
+                                    movie.bigImage,
+                                    width: 100, // Adjusted width
+                                    height: 150, // Adjusted height
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        movie.title,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        movie.genre.join(', '),
+                                        style: const TextStyle(
+                                          color: Colors.white70,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        '${movie.year}',
+                                        style: const TextStyle(
+                                          color: Colors.white70,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    context
+                                        .read<FavoriteMovieCubit>()
+                                        .removeFavoriteMovie(userId, movie);
+                                  },
+                                  icon: const Icon(
+                                    Icons.delete,
+                                    color: Colors.redAccent,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                        trailing: IconButton(
-                            onPressed: () {
-                              context
-                                  .read<FavoriteMovieCubit>()
-                                  .removeFavoriteMovie(userId, movie);
-                            },
-                            icon: const Icon(
-                              Icons.delete,
-                              color: Colors.white,
-                            )),
                       ),
                     ),
                   );

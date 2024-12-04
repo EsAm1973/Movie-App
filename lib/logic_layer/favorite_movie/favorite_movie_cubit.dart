@@ -23,25 +23,25 @@ class FavoriteMovieCubit extends Cubit<FavoriteMovieState> {
     }
   }
 
-  void addFavoriteMovie(int userId, Movie movie) {
-    emit(FavoriteMoviesLoading());
-    _favoriteRepository.addFavoriteMovie(userId, movie).then((_) {
-      emit(FavoriteMovieAdded(movie: movie));
-      fetchFavoriteMovies(userId);
-    }).catchError((error) {
+  void addFavoriteMovie(int userId, Movie movie) async {
+    try {
+      await _favoriteRepository.addFavoriteMovie(userId, movie);
+      final movies = await _favoriteRepository.getFavoriteMovies(userId);
+      emit(FavoriteMoviesLoaded(favoriteMovies: movies));
+    } catch (error) {
       emit(FavoriteMoviesError(
-          errMessage: 'Faild to add favorite movie: $error'));
-    });
+          errMessage: 'Failed to add favorite movie: $error'));
+    }
   }
 
-  void removeFavoriteMovie(int userId, Movie movie) {
-    emit(FavoriteMoviesLoading());
-    _favoriteRepository.removeFavoriteMovie(userId, movie).then((_) {
-      emit(FavoriteMovieRemoved(movie: movie));
-      fetchFavoriteMovies(userId);
-    }).catchError((error) {
+  void removeFavoriteMovie(int userId, Movie movie) async {
+    try {
+      await _favoriteRepository.removeFavoriteMovie(userId, movie);
+      final movies = await _favoriteRepository.getFavoriteMovies(userId);
+      emit(FavoriteMoviesLoaded(favoriteMovies: movies));
+    } catch (error) {
       emit(FavoriteMoviesError(
-          errMessage: 'Faild to remove favorite movie: $error'));
-    });
+          errMessage: 'Failed to remove favorite movie: $error'));
+    }
   }
 }

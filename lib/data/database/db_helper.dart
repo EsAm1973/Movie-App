@@ -34,24 +34,29 @@ class DatabaseHelper {
     ''');
 
     await db.execute('''
-      CREATE TABLE favorite_movies (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER,
-        movie_id TEXT,
-        rank INTEGER,
-        title TEXT,
-        description TEXT,
-        image TEXT,
-        big_image TEXT,
-        genre TEXT,
-        thumbnail TEXT,
-        rating TEXT,
-        year INTEGER,
-        imdb_id TEXT,
-        imdb_link TEXT,
-        FOREIGN KEY(user_id) REFERENCES users(id)
-      )
-    ''');
+  CREATE TABLE favorite_movies (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    movie_id TEXT,
+    rank INTEGER,
+    title TEXT,
+    description TEXT,
+    image TEXT,
+    big_image TEXT,
+    genre TEXT,
+    thumbnail TEXT,
+    rating TEXT,
+    year INTEGER,
+    imdb_id TEXT,
+    imdb_link TEXT,
+    trailer TEXT,
+    trailer_embed_link TEXT,
+    trailer_youtube_id TEXT,
+    director TEXT,
+    writers TEXT,
+    FOREIGN KEY(user_id) REFERENCES users(id)
+  )
+''');
   }
 
   // User Sign Up
@@ -105,7 +110,13 @@ class DatabaseHelper {
       'year': movie.year,
       'imdb_id': movie.imdbId,
       'imdb_link': movie.imdbLink,
+      'trailer': movie.trailer,
+      'trailer_embed_link': movie.trailerEmbedLink,
+      'trailer_youtube_id': movie.trailerYouTubeId,
+      'director': movie.director.join(','), // Save as comma-separated string
+      'writers': movie.writers.join(','), // Save as comma-separated string
     };
+
     return await db.insert(
       'favorite_movies',
       movieData,
@@ -129,13 +140,23 @@ class DatabaseHelper {
         description: movie['description'] as String,
         image: movie['image'] as String,
         bigImage: movie['big_image'] as String,
-        genre: (movie['genre'] as String).split(','),
+        genre: (movie['genre'] as String)
+            .split(','), // Split comma-separated genre string
         thumbnail: movie['thumbnail'] as String,
         rating: movie['rating'] as String,
         id: movie['movie_id'] as String,
         year: movie['year'] as int,
         imdbId: movie['imdb_id'] as String,
         imdbLink: movie['imdb_link'] as String,
+        trailer: movie['trailer'] as String, // Add trailer
+        trailerEmbedLink:
+            movie['trailer_embed_link'] as String, // Add trailer embed link
+        trailerYouTubeId:
+            movie['trailer_youtube_id'] as String, // Add trailer YouTube ID
+        director: (movie['director'] as String)
+            .split(','), // Split comma-separated director string
+        writers: (movie['writers'] as String)
+            .split(','), // Split comma-separated writers string
       );
     }).toList();
   }
@@ -152,4 +173,5 @@ class DatabaseHelper {
       throw Exception('Failed to remove favorite movie: $e');
     }
   }
+  
 }

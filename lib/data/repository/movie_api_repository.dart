@@ -6,8 +6,15 @@ class MovieApiRepository {
 
   MovieApiRepository({required this.movieService});
 
-  Future<List<Movie>> fetchTopMovie() async {
-    final jsonData = await movieService.fetchTopMovie();
-    return jsonData.map<Movie>((json) => Movie.fromJson(json)).toList();
+  Future<List<Movie>> fetchTopMovies() async {
+    final jsonData = await movieService.fetchMovies('');
+    return (jsonData as List<dynamic>)
+        .map<Movie>((json) => Movie.fromJson(json))
+        .toList();
+  }
+
+  Future<Movie> fetchMovieDetails(String movieId) async {
+    final jsonData = await movieService.fetchMovies(movieId);
+    return Movie.fromJson(jsonData as Map<String, dynamic>); // Handle single movie object
   }
 }

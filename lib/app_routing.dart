@@ -20,6 +20,8 @@ import 'package:movie_app/presentation/screens/signup_screen.dart';
 class AppRouting {
   final MoviesCubit moviesCubit =
       MoviesCubit(MovieApiRepository(movieService: MovieService()));
+  final FavoriteMovieCubit favoriteMovieCubit = FavoriteMovieCubit(
+      favoriteRepository: FavoriteRepository(databaseHelper: DatabaseHelper()));
   Route? onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       case '/':
@@ -60,9 +62,10 @@ class AppRouting {
             builder: (context) => MultiBlocProvider(
                   providers: [
                     BlocProvider.value(value: context.read<UserDataCubit>()),
-                    BlocProvider<MoviesCubit>.value(
-                      value: moviesCubit,
-                    ),
+                    BlocProvider(
+                        create: (context) => MoviesCubit(
+                            MovieApiRepository(movieService: MovieService()))
+                          ..fetchMovies())
                   ],
                   child: const HomepageScreen(),
                 ));
@@ -84,11 +87,10 @@ class AppRouting {
           builder: (context) => MultiBlocProvider(
             providers: [
               BlocProvider.value(value: context.read<UserDataCubit>()),
-              BlocProvider(
-                create: (context) => FavoriteMovieCubit(
-                    favoriteRepository:
-                        FavoriteRepository(databaseHelper: DatabaseHelper())),
+              BlocProvider<MoviesCubit>.value(
+                value: moviesCubit,
               ),
+              BlocProvider<FavoriteMovieCubit>.value(value: favoriteMovieCubit),
             ],
             child: MovieDetails(movie: args),
           ),
@@ -99,11 +101,8 @@ class AppRouting {
             builder: (context) => MultiBlocProvider(
                   providers: [
                     BlocProvider.value(value: context.read<UserDataCubit>()),
-                    BlocProvider(
-                      create: (context) => FavoriteMovieCubit(
-                          favoriteRepository: FavoriteRepository(
-                              databaseHelper: DatabaseHelper())),
-                    ),
+                    BlocProvider<FavoriteMovieCubit>.value(
+                        value: favoriteMovieCubit),
                   ],
                   child: const FavoriteScreen(),
                 ));
