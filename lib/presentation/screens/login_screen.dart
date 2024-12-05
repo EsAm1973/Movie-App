@@ -36,7 +36,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: BlocConsumer<AuthCubit, AuthState>(
                   listener: (context, state) {
                     if (state is LoginSuccess) {
-                      Navigator.pushReplacementNamed(context, 'home');
+                      Navigator.of(context)
+                          .pushNamedAndRemoveUntil('navbar', (route) => false);
                     } else if (state is LoginFailure) {
                       ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text(state.errMessage)));

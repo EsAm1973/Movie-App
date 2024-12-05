@@ -15,13 +15,16 @@ import 'package:movie_app/presentation/screens/favorite_screen.dart';
 import 'package:movie_app/presentation/screens/homepage_screen.dart';
 import 'package:movie_app/presentation/screens/login_screen.dart';
 import 'package:movie_app/presentation/screens/movie_details.dart';
+import 'package:movie_app/presentation/screens/profile_screen.dart';
 import 'package:movie_app/presentation/screens/signup_screen.dart';
+import 'package:movie_app/presentation/widgets/button_nav_bar.dart';
 
 class AppRouting {
   final MoviesCubit moviesCubit =
       MoviesCubit(MovieApiRepository(movieService: MovieService()));
   final FavoriteMovieCubit favoriteMovieCubit = FavoriteMovieCubit(
       favoriteRepository: FavoriteRepository(databaseHelper: DatabaseHelper()));
+
   Route? onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       case '/':
@@ -57,18 +60,26 @@ class AppRouting {
           ),
         );
 
-      case 'home':
+      case 'navbar':
         return MaterialPageRoute(
             builder: (context) => MultiBlocProvider(
                   providers: [
                     BlocProvider.value(value: context.read<UserDataCubit>()),
                     BlocProvider(
-                        create: (context) => MoviesCubit(
-                            MovieApiRepository(movieService: MovieService()))
-                          ..fetchMovies())
+                      create: (_) => MoviesCubit(
+                          MovieApiRepository(movieService: MovieService()))
+                        ..fetchMovies(),
+                    ),
+                    BlocProvider<FavoriteMovieCubit>.value(
+                        value: favoriteMovieCubit),
                   ],
-                  child: const HomepageScreen(),
+                  child: const BottomNavBar(),
                 ));
+
+      case 'home':
+        return MaterialPageRoute(
+          builder: (context) => const HomepageScreen(),
+        );
 
       case 'category':
         final args = settings.arguments as Map<String, dynamic>;
@@ -98,14 +109,13 @@ class AppRouting {
 
       case 'favorite':
         return MaterialPageRoute(
-            builder: (context) => MultiBlocProvider(
-                  providers: [
-                    BlocProvider.value(value: context.read<UserDataCubit>()),
-                    BlocProvider<FavoriteMovieCubit>.value(
-                        value: favoriteMovieCubit),
-                  ],
-                  child: const FavoriteScreen(),
-                ));
+          builder: (context) => const FavoriteScreen(),
+        );
+
+      case 'profile':
+        return MaterialPageRoute(
+          builder: (context) => const ProfileScreen(),
+        );
       default:
         return null;
     }
