@@ -13,12 +13,18 @@ class HomepageScreen extends StatefulWidget {
 class _HomepageScreenState extends State<HomepageScreen> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('Welcome back!'),
-        foregroundColor: Colors.white,
-        backgroundColor: Colors.black,
+        elevation: theme.appBarTheme.elevation,
+        centerTitle: theme.appBarTheme.centerTitle,
+        scrolledUnderElevation: theme.appBarTheme.scrolledUnderElevation,
+        backgroundColor: theme.appBarTheme.backgroundColor,
+        iconTheme: theme.appBarTheme.iconTheme,
+        actionsIconTheme: theme.appBarTheme.actionsIconTheme,
+        titleTextStyle: theme.appBarTheme.titleTextStyle,
       ),
       body: SafeArea(
         child: Column(
@@ -29,27 +35,18 @@ class _HomepageScreenState extends State<HomepageScreen> {
                 decoration: InputDecoration(
                   contentPadding: const EdgeInsets.all(15),
                   hintText: 'Search Movie',
-                  hintStyle: const TextStyle(color: Colors.grey),
                   labelText: 'Search',
-                  labelStyle: const TextStyle(color: Colors.grey),
-                  suffixIcon: const Icon(
+                  hintStyle: theme.inputDecorationTheme.hintStyle,
+                  labelStyle: theme.inputDecorationTheme.labelStyle,
+                  suffixIcon: Icon(
                     Icons.search,
-                    color: Colors.grey,
+                    color: theme.inputDecorationTheme.suffixIconColor,
                   ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: const BorderSide(color: Colors.grey),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: const BorderSide(color: Colors.grey),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: const BorderSide(color: Colors.grey),
-                  ),
+                  border: theme.inputDecorationTheme.border,
+                  enabledBorder: theme.inputDecorationTheme.enabledBorder,
+                  focusedBorder: theme.inputDecorationTheme.focusedBorder,
                 ),
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: theme.textTheme.bodyLarge?.color),
                 onChanged: (query) {
                   context.read<MoviesCubit>().searchMovies(query);
                 },
@@ -78,13 +75,8 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 20, vertical: 10),
-                                    child: Text(
-                                      entry.key,
-                                      style: const TextStyle(
-                                        fontSize: 24,
-                                        color: Colors.white,
-                                      ),
-                                    ),
+                                    child: Text(entry.key,
+                                        style: theme.textTheme.headlineMedium),
                                   ),
                                   TextButton(
                                     onPressed: () async {
@@ -97,16 +89,17 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                     child: const Text(
                                       'See All',
                                       style: TextStyle(
-                                        fontSize: 18,
+                                        fontSize: 17,
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.grey,
+                                        color:
+                                            Colors.grey, // Dynamic button color
                                       ),
                                     ),
                                   ),
                                 ],
                               ),
                               SizedBox(
-                                height: 260,
+                                height: 220,
                                 child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
                                   itemCount: entry.value.take(6).length,
@@ -118,28 +111,29 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                             arguments: movie);
                                       },
                                       child: Container(
-                                        width: 190,
-                                        height: 170,
+                                        width: 160,
+                                        height: 140,
                                         margin: const EdgeInsets.symmetric(
                                             horizontal: 10),
                                         decoration: BoxDecoration(
                                           borderRadius:
-                                              BorderRadius.circular(10),
+                                              BorderRadius.circular(15),
                                           border: Border.all(
-                                            color: Colors.grey,
+                                            color: theme
+                                                .dividerColor, // Dynamic border color
                                             width: 1,
                                           ),
-                                          boxShadow: const [
+                                          boxShadow: [
                                             BoxShadow(
-                                              color: Colors.black26,
-                                              blurRadius: 8,
-                                              offset: Offset(0, 4),
+                                              color: theme.shadowColor,
+                                              blurRadius: 2,
+                                              offset: const Offset(0, 4),
                                             ),
                                           ],
                                         ),
                                         child: ClipRRect(
                                           borderRadius:
-                                              BorderRadius.circular(10),
+                                              BorderRadius.circular(15),
                                           child: Image.network(
                                             movie.image,
                                             fit: BoxFit.cover,
@@ -170,7 +164,8 @@ class _HomepageScreenState extends State<HomepageScreen> {
                         itemCount: state.searchedMovies.length,
                         itemBuilder: (context, index) {
                           final movie = state.searchedMovies[index];
-                          return MovieCard(movie: movie);
+                          return MovieCard(
+                              movie: movie); // Use your MovieCard widget here
                         },
                       ),
                     );
@@ -178,13 +173,17 @@ class _HomepageScreenState extends State<HomepageScreen> {
                     return Center(
                       child: Text(
                         state.errMessage,
-                        style: const TextStyle(color: Colors.white),
+                        style: TextStyle(
+                            color: theme.textTheme.bodyLarge
+                                ?.color), // Dynamic error text color
                       ),
                     );
                   }
-                  return const Center(
+                  return Center(
                     child: Text('Start browsing movies!',
-                        style: TextStyle(color: Colors.white)),
+                        style: TextStyle(
+                            color: theme.textTheme.bodyLarge
+                                ?.color)), // Dynamic text color
                   );
                 },
               ),

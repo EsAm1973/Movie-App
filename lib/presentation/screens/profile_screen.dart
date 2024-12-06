@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_app/logic_layer/theme_cubit/theme_cubit.dart';
+
 import 'package:movie_app/logic_layer/user_data/user_data_cubit.dart';
 import 'package:movie_app/presentation/widgets/profile_item.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
   late UserDataCubit userCubit;
-  late int userId;
+
   @override
   void initState() {
     super.initState();
@@ -20,14 +23,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final themeCubit = context.read<ThemeCubit>();
+    final isDarkMode = themeCubit.state is ThemeChanged &&
+        (themeCubit.state as ThemeChanged).themeData.brightness ==
+            Brightness.dark;
+
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('Profile'),
         centerTitle: true,
-        backgroundColor: Colors.black,
+        backgroundColor: theme.appBarTheme.backgroundColor,
         elevation: 0,
-        foregroundColor: Colors.white,
+        foregroundColor: theme.appBarTheme.foregroundColor,
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -38,38 +48,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   CircleAvatar(
                     radius: 50,
-                    backgroundImage: NetworkImage(
-                        'https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/user-profile-icon.png'),
+                    backgroundImage: const NetworkImage(
+                      'https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/user-profile-icon.png',
+                    ),
                   ),
                   Positioned(
                     bottom: 0,
                     right: 4,
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.grey[900],
+                        color: theme.cardColor,
                         shape: BoxShape.circle,
                       ),
                       padding: const EdgeInsets.all(4),
-                      child: const Icon(
+                      child: Icon(
                         Icons.edit,
                         size: 18,
-                        color: Colors.white,
+                        color: theme.iconTheme.color,
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
               userCubit.state!.username,
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
+              style: theme.textTheme.headlineSmall
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Expanded(
               child: ListView(
                 children: [
@@ -77,36 +84,49 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     icon: Icons.person,
                     title: userCubit.state!.username,
                     onTap: () {},
+                    
                   ),
                   ProfileItem(
                     icon: Icons.email,
                     title: 'example@gmail.com',
                     onTap: () {},
+                   
                   ),
                   ProfileItem(
                     icon: Icons.lock,
                     title: '${userCubit.state!.password}',
                     onTap: () {},
+                    
                   ),
                   ProfileItem(
                     icon: Icons.location_on,
                     title: 'Egypt, Cairo',
                     onTap: () {},
+                    
                   ),
                   ProfileItem(
-                    icon: Icons.support,
-                    title: 'Support',
+                    icon: Icons.dark_mode,
+                    title: 'Dark Mode',
                     onTap: () {},
+                    trailingWidget: Switch(
+                      value: isDarkMode,
+                      onChanged: (value) {
+                        themeCubit.toggleTheme();
+                      },
+                      activeColor: theme.colorScheme.primary,
+                      inactiveThumbColor: theme.disabledColor,
+                    ),
+                    
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   ListTile(
-                    leading: const Icon(
+                    leading: Icon(
                       Icons.logout,
-                      color: Colors.white,
+                      color: theme.iconTheme.color,
                     ),
                     title: Text(
                       'Log Out',
-                      style: TextStyle(fontSize: 15, color: Colors.white),
+                      style: theme.textTheme.bodyMedium,
                     ),
                     onTap: () {
                       // Navigator.of(context).pushAndRemoveUntil(

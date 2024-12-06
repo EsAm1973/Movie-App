@@ -11,12 +11,18 @@ class CategoryMoviesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor:theme.scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text('$category Movies'),
-        backgroundColor: Colors.black,
-        foregroundColor: Colors.white,
+        elevation: theme.appBarTheme.elevation,
+        scrolledUnderElevation: theme.appBarTheme.scrolledUnderElevation,
+        backgroundColor: theme.appBarTheme.backgroundColor,
+        iconTheme: theme.appBarTheme.iconTheme,
+        actionsIconTheme: theme.appBarTheme.actionsIconTheme,
+        titleTextStyle: theme.appBarTheme.titleTextStyle,
+        foregroundColor: theme.appBarTheme.foregroundColor,
       ),
       body: GridView.builder(
         padding: const EdgeInsets.all(8.0),

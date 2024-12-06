@@ -37,38 +37,52 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return SafeArea(
       child: Scaffold(
+        backgroundColor: theme.scaffoldBackgroundColor,
         body: PageView(
           controller: _pageController,
           physics: const NeverScrollableScrollPhysics(),
           children: _screens,
         ),
         bottomNavigationBar: Container(
-          color: Colors.black,
+          color: theme.scaffoldBackgroundColor,
+          height: 75,
           child: ClipRRect(
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(20),
               topRight: Radius.circular(20),
             ),
             child: BottomNavigationBar(
-              backgroundColor: Colors.grey[900],
-              selectedItemColor: Colors.purpleAccent,
-              unselectedItemColor: Colors.grey,
+              backgroundColor: theme.navigationBarTheme.backgroundColor,
+              selectedItemColor: theme.navigationBarTheme
+                  .indicatorColor, // Use indicatorColor for selected items
+              unselectedItemColor: theme.unselectedWidgetColor,
+
               currentIndex: _currentIndex,
               onTap: _onTabTapped,
               type: BottomNavigationBarType.fixed,
               items: const [
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
+                  icon: Icon(
+                    Icons.home_outlined,
+                    size: 28,
+                  ),
                   label: 'Home',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.favorite),
+                  icon: Icon(
+                    Icons.favorite_outline,
+                    size: 28,
+                  ),
                   label: 'Favorite',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.person),
+                  icon: Icon(
+                    Icons.person_2_outlined,
+                    size: 28,
+                  ),
                   label: 'Profile',
                 ),
               ],

@@ -23,13 +23,19 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: theme.scaffoldBackgroundColor,
         appBar: AppBar(
-          title: Text('Favorite Movies'),
-          foregroundColor: Colors.white,
-          backgroundColor: Colors.black,
+          title: const Text('Favorite Movies'),
+          elevation: theme.appBarTheme.elevation,
+          scrolledUnderElevation: theme.appBarTheme.scrolledUnderElevation,
+          backgroundColor: theme.appBarTheme.backgroundColor,
+          iconTheme: theme.appBarTheme.iconTheme,
+          actionsIconTheme: theme.appBarTheme.actionsIconTheme,
+          titleTextStyle: theme.appBarTheme.titleTextStyle,
           centerTitle: true,
         ),
         body: BlocBuilder<FavoriteMovieCubit, FavoriteMovieState>(
@@ -40,9 +46,9 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
               );
             } else if (state is FavoriteMoviesLoaded) {
               if (state.favoriteMovies.isEmpty) {
-                return const Center(
+                return Center(
                     child: Text('No favorite movies yet.',
-                        style: TextStyle(color: Colors.white)));
+                        style: theme.textTheme.bodyLarge));
               }
               return ListView.builder(
                 itemCount: state.favoriteMovies.length,
@@ -63,12 +69,20 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                         elevation: 5,
                         child: Container(
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            gradient: const LinearGradient(
-                              colors: [Colors.black87, Colors.black54],
+                            gradient: LinearGradient(
+                              colors: isDarkTheme
+                                  ? [
+                                      Colors.black,
+                                      Colors.grey.shade700,
+                                    ] // Colors for dark theme
+                                  : [
+                                      Colors.white70,
+                                      Colors.white54
+                                    ], // Colors for light theme
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                             ),
+                            borderRadius: BorderRadius.circular(15),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(16),
@@ -90,33 +104,19 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        movie.title,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          movie.title,
+                                          style: theme.textTheme.headlineSmall),
                                       const SizedBox(height: 8),
                                       Text(
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        movie.genre.join(', '),
-                                        style: const TextStyle(
-                                          color: Colors.white70,
-                                          fontSize: 16,
-                                        ),
-                                      ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          movie.genre.join(', '),
+                                          style: theme.textTheme.bodyMedium),
                                       const SizedBox(height: 8),
-                                      Text(
-                                        '${movie.year}',
-                                        style: const TextStyle(
-                                          color: Colors.white70,
-                                          fontSize: 16,
-                                        ),
-                                      ),
+                                      Text('${movie.year}',
+                                          style: theme.textTheme.bodyMedium),
                                     ],
                                   ),
                                 ),
@@ -127,6 +127,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                         .removeFavoriteMovie(userId, movie);
                                   },
                                   icon: const Icon(
+                                    size: 28,
                                     Icons.delete,
                                     color: Colors.redAccent,
                                   ),

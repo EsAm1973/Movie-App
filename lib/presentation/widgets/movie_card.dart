@@ -8,6 +8,7 @@ class MovieCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme=Theme.of(context);
     return GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, 'details', arguments: movie);
@@ -28,7 +29,7 @@ class MovieCard extends StatelessWidget {
               boxShadow: const [
                 BoxShadow(
                   color: Colors.black26,
-                  blurRadius: 8,
+                  blurRadius: 2,
                   offset: Offset(0, 4),
                 ),
               ],
@@ -46,10 +47,7 @@ class MovieCard extends StatelessWidget {
             movie.title,
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 19,
-            ),
+            style: theme.textTheme.titleLarge,
             textAlign: TextAlign.center,
           ),
         ],

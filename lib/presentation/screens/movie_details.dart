@@ -76,9 +76,11 @@ class _MovieDetailsState extends State<MovieDetails> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: theme.scaffoldBackgroundColor,
         body: Column(
           children: [
             Stack(children: [
@@ -88,10 +90,15 @@ class _MovieDetailsState extends State<MovieDetails> {
                 child: ShaderMask(
                   shaderCallback: (rect) {
                     return LinearGradient(
-                      colors: [
-                        Colors.white.withOpacity(0.9),
-                        Colors.white.withOpacity(0),
-                      ],
+                      colors: isDarkTheme
+                          ? [
+                              Colors.white.withOpacity(0.9),
+                              Colors.white.withOpacity(0.0),
+                            ]
+                          : [
+                              Colors.black.withOpacity(1),
+                              Colors.black.withOpacity(0.0),
+                            ],
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                     ).createShader(rect);
@@ -119,8 +126,8 @@ class _MovieDetailsState extends State<MovieDetails> {
                 top: 20,
                 left: 16,
                 child: IconButton(
-                  icon: const Icon(Icons.arrow_back_ios_new,
-                      size: 30, color: Colors.white),
+                  icon:  Icon(Icons.arrow_back_ios_new,
+                      size: 30, color: theme.iconTheme.color),
                   onPressed: () {
                     Navigator.pop(context);
                   },
@@ -143,7 +150,7 @@ class _MovieDetailsState extends State<MovieDetails> {
                       icon: Icon(
                         isFavorite ? Icons.favorite : Icons.favorite_border,
                         size: 30,
-                        color: isFavorite ? Colors.red : Colors.white,
+                        color: isFavorite ? Colors.red : theme.iconTheme.color,
                       ),
                       onPressed: () {
                         if (isFavorite) {
@@ -168,19 +175,11 @@ class _MovieDetailsState extends State<MovieDetails> {
                           Text(
                             state.movie.title,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: Colors.grey.shade100,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: theme.textTheme.headlineMedium,
                           ),
                           Text(
                             state.movie.year.toString(),
-                            style: const TextStyle(
-                              color: Colors.white70,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: theme.textTheme.headlineSmall,
                           ),
                         ],
                       );
@@ -200,8 +199,7 @@ class _MovieDetailsState extends State<MovieDetails> {
                       children: [
                         Text(
                           state.movie.description,
-                          style: const TextStyle(
-                              fontSize: 18, color: Colors.white70),
+                          style: theme.textTheme.titleMedium,
                         ),
                         const SizedBox(height: 20),
                         SizedBox(
