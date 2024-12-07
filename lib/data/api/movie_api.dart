@@ -6,7 +6,7 @@ class MovieService {
   Future<dynamic> fetchMovies(String endpoint) async {
     final String url = 'https://imdb-top-100-movies.p.rapidapi.com/$endpoint';
     final Map<String, String> headers = {
-      'x-rapidapi-key': '688d6697cbmsh258437a8d0222efp13cabajsna1fa83b5be6b',
+      'x-rapidapi-key': '3bd102be09msh49d6ee2b7399eaap1cc100jsn9b6de019581f',
       'x-rapidapi-host': 'imdb-top-100-movies.p.rapidapi.com',
     };
 

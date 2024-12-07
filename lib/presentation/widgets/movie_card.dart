@@ -8,7 +8,7 @@ class MovieCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme=Theme.of(context);
+    final theme = Theme.of(context);
     return GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, 'details', arguments: movie);
@@ -26,20 +26,24 @@ class MovieCard extends StatelessWidget {
                 color: Colors.grey,
                 width: 1,
               ),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 2,
-                  offset: Offset(0, 4),
-                ),
-              ],
+              // boxShadow: const [
+              //   BoxShadow(
+              //     color: Colors.black26,
+              //     blurRadius: 2,
+              //     offset: Offset(0, 4),
+              //   ),
+              // ],
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: Image.network(
-                movie.image,
-                fit: BoxFit.cover,
-              ),
+              child: movie.bigImage.isNotEmpty
+                  ? FadeInImage.assetNetwork(
+                      placeholder: 'assets/loading.gif',
+                      image: movie.bigImage,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    )
+                  : Image.asset('assets/placeholder.png'),
             ),
           ),
           const SizedBox(height: 15),

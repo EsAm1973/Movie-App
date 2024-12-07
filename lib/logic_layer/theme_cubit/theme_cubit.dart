@@ -9,7 +9,7 @@ import 'package:movie_app/themes/textfield_theme.dart';
 part 'theme_state.dart';
 
 class ThemeCubit extends Cubit<ThemeState> {
-  ThemeCubit() : super(ThemeChanged(lightTheme));
+  ThemeCubit() : super(ThemeChanged(darkTheme));
 
   static final ThemeData lightTheme = ThemeData(
     useMaterial3: true,

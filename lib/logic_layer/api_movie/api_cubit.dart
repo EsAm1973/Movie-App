@@ -14,7 +14,6 @@ class MoviesCubit extends Cubit<MoviesState> {
 
   void fetchMovies() {
     if (categorizedMovies != null) {
-      // Re-emit the cached state if movies are already fetched
       emit(MoviesLoaded(categorizedMovies: categorizedMovies!));
       return;
     }
@@ -27,7 +26,15 @@ class MoviesCubit extends Cubit<MoviesState> {
         'Adventure': [],
         'Family': [],
         'Comedy': [],
+        'Trending': [],
       };
+
+      final List<Movie> trending =
+          movies.where((movie) => movie.rank >= 1 && movie.rank <= 10).toList();
+      categoriesMovies['Trending'] =
+          trending; // Populate the trending category
+
+      movies.shuffle();
       for (var movie in movies) {
         for (var category in categoriesMovies.keys) {
           if (movie.genre.contains(category)) {
@@ -35,6 +42,7 @@ class MoviesCubit extends Cubit<MoviesState> {
           }
         }
       }
+
       categorizedMovies = categoriesMovies;
       emit(MoviesLoaded(categorizedMovies: categoriesMovies));
     }).catchError((error) {

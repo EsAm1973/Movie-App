@@ -32,8 +32,7 @@ class MyApp extends StatelessWidget {
         if (themeState is ThemeChanged) {
           appTheme = themeState.themeData;
         } else {
-          // Default fallback if ThemeCubit doesn't emit a ThemeChanged state
-          appTheme = ThemeCubit.lightTheme;
+          appTheme = ThemeCubit.darkTheme;
         }
 
         return MaterialApp(

@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_app/logic_layer/api_movie/api_cubit.dart';
@@ -29,6 +30,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
       body: SafeArea(
         child: Column(
           children: [
+            // Search TextField
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
@@ -59,98 +61,8 @@ class _HomepageScreenState extends State<HomepageScreen> {
                     return const Center(
                       child: CircularProgressIndicator(),
                     );
-                  } else if (state is MoviesLoaded) {
-                    final categorizedMovies = state.categorizedMovies;
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: ListView(
-                        children: categorizedMovies.entries.map((entry) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 20, vertical: 10),
-                                    child: Text(entry.key,
-                                        style: theme.textTheme.headlineMedium),
-                                  ),
-                                  TextButton(
-                                    onPressed: () async {
-                                      Navigator.pushNamed(context, 'category',
-                                          arguments: {
-                                            'category': entry.key,
-                                            'movies': entry.value,
-                                          });
-                                    },
-                                    child: const Text(
-                                      'See All',
-                                      style: TextStyle(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.bold,
-                                        color:
-                                            Colors.grey, // Dynamic button color
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 220,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: entry.value.take(6).length,
-                                  itemBuilder: (context, index) {
-                                    final movie = entry.value[index];
-                                    return GestureDetector(
-                                      onTap: () {
-                                        Navigator.pushNamed(context, 'details',
-                                            arguments: movie);
-                                      },
-                                      child: Container(
-                                        width: 160,
-                                        height: 140,
-                                        margin: const EdgeInsets.symmetric(
-                                            horizontal: 10),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                          border: Border.all(
-                                            color: theme
-                                                .dividerColor, // Dynamic border color
-                                            width: 1,
-                                          ),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: theme.shadowColor,
-                                              blurRadius: 2,
-                                              offset: const Offset(0, 4),
-                                            ),
-                                          ],
-                                        ),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                          child: Image.network(
-                                            movie.image,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                              const SizedBox(height: 10),
-                            ],
-                          );
-                        }).toList(),
-                      ),
-                    );
                   } else if (state is MoviesSearchLoaded) {
+                    // Display search results
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: GridView.builder(
@@ -164,26 +76,177 @@ class _HomepageScreenState extends State<HomepageScreen> {
                         itemCount: state.searchedMovies.length,
                         itemBuilder: (context, index) {
                           final movie = state.searchedMovies[index];
-                          return MovieCard(
-                              movie: movie); // Use your MovieCard widget here
+                          return MovieCard(movie: movie);
                         },
                       ),
                     );
+                  } else if (state is MoviesLoaded) {
+                    final trendingMovies =
+                        state.categorizedMovies['Trending'] ?? [];
+                    return ListView(
+                      children: [
+                        if (trendingMovies.isNotEmpty)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 10),
+                                child: Text('Trending Movies',
+                                    style: theme.textTheme.headlineMedium),
+                              ),
+                              SizedBox(
+                                width: double.infinity,
+                                child: CarouselSlider.builder(
+                                  itemCount: trendingMovies.length,
+                                  options: CarouselOptions(
+                                    height: 230,
+                                    autoPlay: true,
+                                    viewportFraction: 0.50,
+                                    autoPlayCurve: Curves.fastOutSlowIn,
+                                    autoPlayAnimationDuration:
+                                        const Duration(seconds: 1),
+                                    enlargeCenterPage: true,
+                                    pageSnapping: true,
+                                  ),
+                                  itemBuilder: (context, index, pageViewIndex) {
+                                    final movie = trendingMovies[index];
+                                    return GestureDetector(
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                          context,
+                                          'details',
+                                          arguments: movie,
+                                        );
+                                      },
+                                      child: Container(
+                                        width: 180,
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal: 10),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: theme.shadowColor,
+                                              blurRadius: 4,
+                                              offset: const Offset(0, 4),
+                                            ),
+                                          ],
+                                        ),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          child: movie.bigImage.isNotEmpty
+                                              ? FadeInImage.assetNetwork(
+                                                  placeholder:
+                                                      'assets/loading.gif',
+                                                  image: movie.bigImage,
+                                                  fit: BoxFit.cover,
+                                                )
+                                              : Image.asset(
+                                                  'assets/placeholder.png'),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        // Categories Section
+                        ...state.categorizedMovies.entries.map((entry) {
+                          if (entry.key == 'Trending') {
+                            return const SizedBox.shrink();
+                          }
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 10),
+                                    child: Text('${entry.key} Movies',
+                                        style: theme.textTheme.headlineMedium),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pushNamed(
+                                        context,
+                                        'category',
+                                        arguments: {
+                                          'category': entry.key,
+                                          'movies': entry.value,
+                                        },
+                                      );
+                                    },
+                                    child: Text(
+                                      'See All',
+                                      style: theme.textTheme.titleSmall,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 220,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: entry.value.take(6).length,
+                                  itemBuilder: (context, index) {
+                                    final movie = entry.value[index];
+                                    return GestureDetector(
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                          context,
+                                          'details',
+                                          arguments: movie,
+                                        );
+                                      },
+                                      child: Container(
+                                        width: 160,
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal: 10),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          child: movie.bigImage.isNotEmpty
+                                              ? FadeInImage.assetNetwork(
+                                                  placeholder:
+                                                      'assets/loading.gif',
+                                                  image: movie.bigImage,
+                                                  fit: BoxFit.cover,
+                                                )
+                                              : Image.asset(
+                                                  'assets/placeholder.png'),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                            ],
+                          );
+                        }),
+                      ],
+                    );
                   } else if (state is MoviesError) {
+                    // Display Error
                     return Center(
                       child: Text(
                         state.errMessage,
-                        style: TextStyle(
-                            color: theme.textTheme.bodyLarge
-                                ?.color), // Dynamic error text color
+                        style: const TextStyle(color: Colors.white),
                       ),
                     );
                   }
-                  return Center(
+                  return const Center(
                     child: Text('Start browsing movies!',
-                        style: TextStyle(
-                            color: theme.textTheme.bodyLarge
-                                ?.color)), // Dynamic text color
+                        style: TextStyle(color: Colors.white)),
                   );
                 },
               ),
