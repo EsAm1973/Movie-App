@@ -4,7 +4,7 @@ import 'package:movie_app/data/model/movie.dart';
 class MovieCard extends StatelessWidget {
   final Movie movie;
 
-  const MovieCard({Key? key, required this.movie}) : super(key: key);
+  const MovieCard({super.key, required this.movie});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class MovieCard extends StatelessWidget {
         children: [
           Container(
             width: double.infinity,
-            height: 230,
+            height: 210,
             margin: const EdgeInsets.symmetric(horizontal: 10),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),

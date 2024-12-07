@@ -29,33 +29,24 @@ class AppRouting {
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(
-            builder: (context) => MultiBlocProvider(
-                  providers: [
-                    BlocProvider.value(value: context.read<UserDataCubit>()),
-                    BlocProvider(
-                      create: (context) => AuthCubit(
-                          userDataCubit: context.read<UserDataCubit>(),
-                          authUserRepository: AuthUserRepository(
-                              databaseHelper: DatabaseHelper())),
-                    ),
-                  ],
-                  child: const LoginScreen(),
-                ));
+          builder: (context) => BlocProvider(
+            create: (context) => AuthCubit(
+                userDataCubit: context.read<UserDataCubit>(),
+                authUserRepository:
+                    AuthUserRepository(databaseHelper: DatabaseHelper())),
+            child: const LoginScreen(),
+          ),
+        );
 
       case 'register':
         return MaterialPageRoute(
-          builder: (context) => MultiBlocProvider(
-            providers: [
-              BlocProvider.value(value: context.read<UserDataCubit>()),
-              BlocProvider(
-                create: (context) => AuthCubit(
-                  userDataCubit: context.read<UserDataCubit>(),
-                  authUserRepository: AuthUserRepository(
-                    databaseHelper: DatabaseHelper(),
-                  ),
-                ),
+          builder: (context) => BlocProvider(
+            create: (context) => AuthCubit(
+              userDataCubit: context.read<UserDataCubit>(),
+              authUserRepository: AuthUserRepository(
+                databaseHelper: DatabaseHelper(),
               ),
-            ],
+            ),
             child: const SignupScreen(),
           ),
         );
@@ -64,7 +55,6 @@ class AppRouting {
         return MaterialPageRoute(
             builder: (context) => MultiBlocProvider(
                   providers: [
-                    BlocProvider.value(value: context.read<UserDataCubit>()),
                     BlocProvider(
                       create: (_) => MoviesCubit(
                           MovieApiRepository(movieService: MovieService()))
@@ -97,7 +87,6 @@ class AppRouting {
         return MaterialPageRoute(
           builder: (context) => MultiBlocProvider(
             providers: [
-              BlocProvider.value(value: context.read<UserDataCubit>()),
               BlocProvider<MoviesCubit>.value(
                 value: moviesCubit,
               ),

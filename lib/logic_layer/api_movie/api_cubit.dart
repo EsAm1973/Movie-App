@@ -31,8 +31,7 @@ class MoviesCubit extends Cubit<MoviesState> {
 
       final List<Movie> trending =
           movies.where((movie) => movie.rank >= 1 && movie.rank <= 10).toList();
-      categoriesMovies['Trending'] =
-          trending; // Populate the trending category
+      categoriesMovies['Trending'] = trending; // Populate the trending category
 
       movies.shuffle();
       for (var movie in movies) {

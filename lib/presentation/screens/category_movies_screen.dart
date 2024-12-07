@@ -13,9 +13,9 @@ class CategoryMoviesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor:theme.scaffoldBackgroundColor,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        title: Text(category),
+        title: Text('$category Movies'),
         elevation: theme.appBarTheme.elevation,
         scrolledUnderElevation: theme.appBarTheme.scrolledUnderElevation,
         backgroundColor: theme.appBarTheme.backgroundColor,

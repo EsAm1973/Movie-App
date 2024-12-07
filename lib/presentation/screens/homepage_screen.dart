@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:movie_app/logic_layer/api_movie/api_cubit.dart';
 import 'package:movie_app/presentation/widgets/movie_card.dart';
 
@@ -18,14 +19,17 @@ class _HomepageScreenState extends State<HomepageScreen> {
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text('Welcome back!'),
+        title: const Text('MOVIE APP'),
         elevation: theme.appBarTheme.elevation,
-        centerTitle: theme.appBarTheme.centerTitle,
+        centerTitle: true,
         scrolledUnderElevation: theme.appBarTheme.scrolledUnderElevation,
         backgroundColor: theme.appBarTheme.backgroundColor,
         iconTheme: theme.appBarTheme.iconTheme,
         actionsIconTheme: theme.appBarTheme.actionsIconTheme,
-        titleTextStyle: theme.appBarTheme.titleTextStyle,
+        titleTextStyle: GoogleFonts.robotoCondensed(
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+            color: const Color.fromARGB(255, 204, 20, 7)),
       ),
       body: SafeArea(
         child: Column(
@@ -191,7 +195,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                 ],
                               ),
                               SizedBox(
-                                height: 220,
+                                height: 210,
                                 child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
                                   itemCount: entry.value.take(6).length,
@@ -240,13 +244,13 @@ class _HomepageScreenState extends State<HomepageScreen> {
                     return Center(
                       child: Text(
                         state.errMessage,
-                        style: const TextStyle(color: Colors.white),
+                        style: theme.textTheme.bodyMedium,
                       ),
                     );
                   }
-                  return const Center(
+                  return  Center(
                     child: Text('Start browsing movies!',
-                        style: TextStyle(color: Colors.white)),
+                        style: theme.textTheme.bodyMedium),
                   );
                 },
               ),
