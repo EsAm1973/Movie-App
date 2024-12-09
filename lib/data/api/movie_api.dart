@@ -15,7 +15,7 @@ class MovieService {
 
       if (response.statusCode == 200) {
         final decodedData = jsonDecode(response.body);
-        return decodedData; // Return the raw decoded data
+        return decodedData;
       } else {
         throw Exception('Failed to load data: ${response.statusCode}');
       }

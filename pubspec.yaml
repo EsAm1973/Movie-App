@@ -40,10 +40,10 @@ dependencies:
   path: ^1.9.0
   flutter_bloc: ^8.1.6
   flutter_native_splash: ^2.4.3
-  cached_network_image: ^3.4.1
   youtube_player_flutter: ^9.1.1
   carousel_slider: ^5.0.0
   google_fonts: ^6.2.1
+  shared_preferences: ^2.3.3
 
 dev_dependencies:
   flutter_test:

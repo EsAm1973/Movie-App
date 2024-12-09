@@ -4,6 +4,7 @@ import 'package:movie_app/logic_layer/theme_cubit/theme_cubit.dart';
 
 import 'package:movie_app/logic_layer/user_data/user_data_cubit.dart';
 import 'package:movie_app/presentation/widgets/profile_item.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -72,10 +73,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             const SizedBox(height: 10),
-            Text(
-              userCubit.state!.username,
-              style: theme.textTheme.headlineSmall
-            ),
+            Text(userCubit.state!.username,
+                style: theme.textTheme.headlineSmall),
             const SizedBox(height: 20),
             Expanded(
               child: ListView(
@@ -84,25 +83,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     icon: Icons.person,
                     title: userCubit.state!.username,
                     onTap: () {},
-                    
                   ),
                   ProfileItem(
                     icon: Icons.email,
                     title: 'example@gmail.com',
                     onTap: () {},
-                   
                   ),
                   ProfileItem(
                     icon: Icons.lock,
                     title: '${userCubit.state!.password}',
                     onTap: () {},
-                    
                   ),
                   ProfileItem(
                     icon: Icons.location_on,
                     title: 'Egypt, Cairo',
                     onTap: () {},
-                    
                   ),
                   ProfileItem(
                     icon: Icons.dark_mode,
@@ -116,7 +111,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       activeColor: theme.colorScheme.primary,
                       inactiveThumbColor: theme.disabledColor,
                     ),
-                    
                   ),
                   const SizedBox(height: 10),
                   ListTile(
@@ -128,11 +122,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       'Log Out',
                       style: theme.textTheme.bodyMedium,
                     ),
-                    onTap: () {
-                      // Navigator.of(context).pushAndRemoveUntil(
-                      //     MaterialPageRoute(
-                      //         builder: (context) => const LoginScreen()),
-                      //     (route) => false);
+                    onTap: () async {
+                      final prefs = await SharedPreferences.getInstance();
+                      await prefs.clear();
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, '/', (route) => false);
                     },
                   ),
                 ],

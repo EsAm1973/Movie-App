@@ -159,6 +159,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                             ],
                           ),
                         // Categories Section
+                        // ... Spread Operation
                         ...state.categorizedMovies.entries.map((entry) {
                           if (entry.key == 'Trending') {
                             return const SizedBox.shrink();
@@ -239,6 +240,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                         }),
                       ],
                     );
+
                   } else if (state is MoviesError) {
                     // Display Error
                     return Center(

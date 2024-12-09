@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_app/data/model/user.dart';
+import 'package:movie_app/logic_layer/user_data/user_data_cubit.dart';
 import 'package:movie_app/presentation/screens/favorite_screen.dart';
 import 'package:movie_app/presentation/screens/homepage_screen.dart';
 import 'package:movie_app/presentation/screens/profile_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({super.key});
@@ -26,6 +30,20 @@ class _BottomNavBarState extends State<BottomNavBar> {
       const FavoriteScreen(),
       const ProfileScreen(),
     ];
+
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getInt('userId') ?? 0;
+    final username = prefs.getString('username') ?? '';
+    final password = prefs.getString('password') ?? '';
+
+    if (username.isNotEmpty && password.isNotEmpty) {
+      final user = User(id: userId, username: username, password: password);
+      context.read<UserDataCubit>().setUser(user);
+    }
   }
 
   void _onTabTapped(int index) {
@@ -66,21 +84,21 @@ class _BottomNavBarState extends State<BottomNavBar> {
               items: const [
                 BottomNavigationBarItem(
                   icon: Icon(
-                    Icons.home_outlined,
+                    Icons.home,
                     size: 28,
                   ),
                   label: 'Home',
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(
-                    Icons.favorite_outline,
+                    Icons.favorite,
                     size: 28,
                   ),
                   label: 'Favorite',
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(
-                    Icons.person_2_outlined,
+                    Icons.person,
                     size: 28,
                   ),
                   label: 'Profile',

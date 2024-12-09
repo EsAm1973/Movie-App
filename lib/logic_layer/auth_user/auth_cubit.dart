@@ -6,6 +6,7 @@ import 'package:movie_app/data/database/db_helper.dart';
 import 'package:movie_app/data/model/user.dart';
 import 'package:movie_app/data/repository/auth_user_repository.dart';
 import 'package:movie_app/logic_layer/user_data/user_data_cubit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'auth_state.dart';
 
@@ -34,6 +35,11 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       final user = await _authUserRepository.loginUser(username, password);
       if (user != null) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('isLoggedIn', true);
+        await prefs.setInt('userId', user.id);
+        await prefs.setString('username', username);
+        await prefs.setString('password', password);
         _userDataCubit.setUser(user);
         emit(LoginSuccess(user: user));
       } else {

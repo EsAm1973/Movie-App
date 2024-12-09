@@ -4,7 +4,7 @@ class ProfileItem extends StatelessWidget {
   final IconData icon;
   final String title;
   final VoidCallback onTap;
-  final Widget? trailingWidget; // Add a trailing widget parameter
+  final Widget? trailingWidget;
 
   const ProfileItem({
     super.key,
@@ -31,7 +31,7 @@ class ProfileItem extends StatelessWidget {
           children: [
             Icon(
               icon,
-              color: theme.iconTheme.color, // Dynamic icon color based on theme
+              color: theme.iconTheme.color,
             ),
             const SizedBox(width: 15),
             Expanded(

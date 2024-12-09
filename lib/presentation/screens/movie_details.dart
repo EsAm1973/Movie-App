@@ -83,7 +83,8 @@ class _MovieDetailsState extends State<MovieDetails> {
         backgroundColor: theme.scaffoldBackgroundColor,
         body: Column(
           children: [
-            Stack(children: [
+            Stack(
+              children: [
               SizedBox(
                 width: double.infinity,
                 height: 600,

@@ -113,8 +113,8 @@ class DatabaseHelper {
       'trailer': movie.trailer,
       'trailer_embed_link': movie.trailerEmbedLink,
       'trailer_youtube_id': movie.trailerYouTubeId,
-      'director': movie.director.join(','), // Save as comma-separated string
-      'writers': movie.writers.join(','), // Save as comma-separated string
+      'director': movie.director.join(','),
+      'writers': movie.writers.join(','),
     };
 
     return await db.insert(
