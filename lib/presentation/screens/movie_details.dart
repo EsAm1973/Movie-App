@@ -40,7 +40,7 @@ class _MovieDetailsState extends State<MovieDetails> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
+              SizedBox(
                 width: MediaQuery.of(context).size.width * 9,
                 height: MediaQuery.of(context).size.height * 0.5,
                 child: YoutubePlayer(
@@ -83,8 +83,7 @@ class _MovieDetailsState extends State<MovieDetails> {
         backgroundColor: theme.scaffoldBackgroundColor,
         body: Column(
           children: [
-            Stack(
-              children: [
+            Stack(children: [
               SizedBox(
                 width: double.infinity,
                 height: 600,
@@ -127,7 +126,7 @@ class _MovieDetailsState extends State<MovieDetails> {
                 top: 20,
                 left: 16,
                 child: IconButton(
-                  icon:  Icon(Icons.arrow_back_ios_new,
+                  icon: Icon(Icons.arrow_back_ios_new,
                       size: 30, color: theme.iconTheme.color),
                   onPressed: () {
                     Navigator.pop(context);
@@ -167,20 +166,41 @@ class _MovieDetailsState extends State<MovieDetails> {
               Positioned(
                 bottom: 40,
                 left: 16,
+                right: 16, // Ensure alignment across the screen
                 child: BlocBuilder<MoviesCubit, MoviesState>(
                   builder: (context, state) {
                     if (state is MovieDetailsLoaded) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(
-                            state.movie.title,
-                            overflow: TextOverflow.ellipsis,
-                            style: theme.textTheme.headlineMedium,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                state.movie.title,
+                                overflow: TextOverflow.ellipsis,
+                                style: theme.textTheme.headlineMedium,
+                              ),
+                              Text(
+                                state.movie.year.toString(),
+                                style: theme.textTheme.headlineSmall,
+                              ),
+                            ],
                           ),
-                          Text(
-                            state.movie.year.toString(),
-                            style: theme.textTheme.headlineSmall,
+                          // Rating and Star Icon
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.star,
+                                color: theme.iconTheme.color,
+                              ),
+                              const SizedBox(width: 5),
+                              Text(
+                                state.movie.rating,
+                                style: theme.textTheme.headlineSmall,
+                              ),
+                            ],
                           ),
                         ],
                       );
